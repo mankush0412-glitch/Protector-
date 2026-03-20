@@ -403,20 +403,20 @@ token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 short_id = token.upper()
 
 links_collection.insert_one({
-        "_id": token,
-        "short_id": short_id,
-        "telegram_link": telegram_link,
-        "link_type": "channel" if "/c/" in telegram_link or "/s/" in telegram_link or telegram_link.count('/') == 1 else "group",
-        "created_by": update.effective_user.id,
-        "created_by_name": update.effective_user.first_name,
-        "created_at": datetime.datetime.now(),
-        "active": True,
-        "clicks": 0
-    })
+    "_id": token,
+    "short_id": short_id,
+    "telegram_link": telegram_link,
+    "link_type": "channel" if "/c/" in telegram_link or "/s/" in telegram_link or telegram_link.count('/') == 1 else "group",
+    "created_by": update.effective_user.id,
+    "created_by_name": update.effective_user.first_name,
+    "created_at": datetime.datetime.now(),
+    "active": True,
+    "clicks": 0
+})
 
-    bot_info = await context.bot.get_me()
-    bot_username = bot_info.username
-    protected_link = f"https://t.me/{bot_username}?start={token}"
+bot_info = await context.bot.get_me()
+bot_username = bot_info.username
+protected_link = f"https://t.me/{bot_username}?start={token}"
     
     # Simple buttons
     keyboard = [
