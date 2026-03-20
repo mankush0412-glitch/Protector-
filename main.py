@@ -268,6 +268,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     """Handle button callbacks."""
     query = update.callback_query
     await query.answer()
+    await query.answer("Checking...",
+show_alert=False)
     
     if query.data == "check_join":
         if await check_channel_membership(query.from_user.id, context):
