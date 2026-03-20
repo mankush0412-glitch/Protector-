@@ -402,7 +402,7 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 short_id = token.upper()
 
-    links_collection.insert_one({
+links_collection.insert_one({
         "_id": token,
         "short_id": short_id,
         "telegram_link": telegram_link,
