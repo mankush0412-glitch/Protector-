@@ -400,7 +400,7 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         return
 
 token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-    short_id = token.upper()
+short_id = token.upper()
 
     links_collection.insert_one({
         "_id": token,
