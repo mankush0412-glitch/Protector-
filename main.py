@@ -182,9 +182,9 @@ for ch in get_support_channels():
 
     invite_link = await get_channel_invite_link(context, ch)
 
-    keyboard.append(
-        [InlineKeyboardButton("📢 Join Channel", url=invite_link)]
-    )
+keyboard.append(
+    [InlineKeyboardButton("✨ 𝙅𝙤𝙞𝙣 𝘾𝙝𝙖𝙣𝙣𝙚𝙡", url=invite_link)]
+)
 
 # 🔥 Agar sab joined ho gaye ho
 if not keyboard:
