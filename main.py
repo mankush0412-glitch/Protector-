@@ -417,15 +417,15 @@ links_collection.insert_one({
 bot_info = await context.bot.get_me()
 bot_username = bot_info.username
 protected_link = f"https://t.me/{bot_username}?start={token}"
-    
-    # Simple buttons
-    keyboard = [
-        [
-            InlineKeyboardButton("📤 Share", url=f"https://t.me/share/url?url={protected_link}&text=🔐 Protected Link - Join via secure invitation"),
-            InlineKeyboardButton("❌ Revoke", callback_data=f"revoke_{token}")
-        ]
+
+# Simple buttons
+keyboard = [
+    [
+        InlineKeyboardButton("📤 Share", url=f"https://t.me/share/url?url={protected_link}&text=🔐 Protected Link"),
+        InlineKeyboardButton("❌ Revoke", callback_data=f"revoke_{token}")
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+]
+reply_markup = InlineKeyboardMarkup(keyboard)
     
     # Formatted message with markdown for easy copying
     await update.message.reply_text(
