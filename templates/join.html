@@ -11,7 +11,6 @@
 :root{
   --neon-cyan:#00ffff;
   --neon-purple:#b800ff;
-  --neon-pink:#ff00ff;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -27,14 +26,12 @@ body{
   color:white;
 }
 
-/* MATRIX BG */
 canvas{
   position:absolute;
   inset:0;
   z-index:-2;
 }
 
-/* NEON RINGS */
 .ring{
   position:absolute;
   border-radius:50%;
@@ -50,7 +47,6 @@ canvas{
   100%{transform:rotate(360deg)}
 }
 
-/* CARD */
 .container{
   background:rgba(0,0,0,0.7);
   padding:50px;
@@ -61,7 +57,6 @@ canvas{
   max-width:400px;
 }
 
-/* LOGO */
 .logo{
   width:90px;
   height:90px;
@@ -77,7 +72,6 @@ canvas{
   object-fit:cover;
 }
 
-/* TITLE */
 h1{
   font-family:'Orbitron';
   font-size:2em;
@@ -87,13 +81,11 @@ h1{
   -webkit-text-fill-color:transparent;
 }
 
-/* STATUS */
 .status{
   margin-top:20px;
   font-size:1.2em;
 }
 
-/* BUTTON */
 button{
   margin-top:25px;
   padding:15px 30px;
@@ -124,7 +116,6 @@ button:hover{
 <div class="container">
 
   <div class="logo">
-    <!-- 🔥 TERA LOGO SAME -->
     <img src="https://i.ibb.co/svvgYRW5/tmpuojdqf2i.jpg">
   </div>
 
@@ -147,6 +138,14 @@ const statusText = document.getElementById("statusText");
 const btn = document.getElementById("btn");
 
 const token = "{{ token }}";
+
+/* 🔥 STEP 3.3 ADD */
+let user_id = null;
+try {
+  user_id = tg.initDataUnsafe?.user?.id;
+} catch(e) {
+  user_id = null;
+}
 
 /* MATRIX EFFECT */
 const canvas = document.getElementById("matrix");
@@ -184,8 +183,19 @@ setInterval(draw,40);
 /* VERIFY SYSTEM */
 async function verify(){
   try{
-    const res = await fetch(`/getgrouplink/${token}`);
+
+    if(!user_id){
+      statusText.innerText = "❌ Open via Telegram";
+      return;
+    }
+
+    const res = await fetch(`/getgrouplink/${token}?user_id=${user_id}`);
     const data = await res.json();
+
+    if(data.error){
+      statusText.innerText = "❌ " + data.error;
+      return;
+    }
 
     statusText.innerText = "✅ Link Verified";
     btn.style.display = "inline-block";
@@ -196,7 +206,7 @@ async function verify(){
     };
 
   }catch{
-    statusText.innerText = "❌ Invalid Link";
+    statusText.innerText = "❌ Server Error";
   }
 }
 
