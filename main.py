@@ -1,7 +1,5 @@
 import os
 import logging
-import uuid
-import base64
 import asyncio
 import datetime
 from typing import Optional
@@ -326,14 +324,14 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not telegram_link.startswith("https://t.me/"):
         await update.message.reply_text("❌ Invalid link. Must start with https://t.me/")
         return
-    
-    unique_id = str(uuid.uuid4())
-    encoded_id = base64.urlsafe_b64encode(unique_id.encode()).decode().rstrip("=")
-    
-    short_id = encoded_id[:8].upper()
+        
+    import random
+import string
+
+token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 
     links_collection.insert_one({
-        "_id": encoded_id,
+        "_id": token,
         "short_id": short_id,
         "telegram_link": telegram_link,
         "link_type": "channel" if "/c/" in telegram_link or "/s/" in telegram_link or telegram_link.count('/') == 1 else "group",
@@ -345,13 +343,13 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     })
 
     bot_username = (await context.bot.get_me()).username
-    protected_link = f"https://t.me/{bot_username}?start={encoded_id}"
+    protected_link = f"https://t.me/{bot_username}?start={token}"
     
     # Simple buttons
     keyboard = [
         [
             InlineKeyboardButton("📤 Share", url=f"https://t.me/share/url?url={protected_link}&text=🔐 Protected Link - Join via secure invitation"),
-            InlineKeyboardButton("❌ Revoke", callback_data=f"revoke_{encoded_id}")
+            InlineKeyboardButton("❌ Revoke", callback_data=f"revoke_{token}")
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
