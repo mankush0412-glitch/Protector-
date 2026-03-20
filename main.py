@@ -160,8 +160,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # 🔐 FORCE JOIN — FOR ALL USERS (NORMAL + PROTECTED)
     if not await check_channel_membership(user_id, context):
         callback_data = f"check_join_{context.args[0]}" if context.args else "check_join"
-
-        keyboard = []
+        
+keyboard = []
 
 for ch in get_support_channels():
     try:
@@ -182,10 +182,19 @@ for ch in get_support_channels():
 
     invite_link = await get_channel_invite_link(context, ch)
 
-keyboard.append(
-    [InlineKeyboardButton("✨ 𝙅𝙤𝙞𝙣 𝘾𝙝𝙖𝙣𝙣𝙚𝙡", url=invite_link)]
-)
+    keyboard.append(
+        [InlineKeyboardButton("✨ 𝙅𝙤𝙞𝙣 𝘾𝙝𝙖𝙣𝙣𝙚𝙡", url=invite_link)]
+    )
 
+# 🔥 Agar sab joined ho gaye ho
+if not keyboard:
+    keyboard.append(
+        [InlineKeyboardButton("✅ Already Joined", callback_data=callback_data)]
+    )
+else:
+    keyboard.append(
+        [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
+    )
 # 🔥 Agar sab joined ho gaye ho
 if not keyboard:
     keyboard.append(
@@ -942,20 +951,6 @@ async def telegram_webhook(request: Request, token: str):
 async def join_page(request: Request, token: str):
     """Web app page."""
     return templates.TemplateResponse("join.html", {"request": request, "token": token})
-
-@app.get("/getgrouplink/{token}")
-async def get_group_link(token: str):
-    """Get real group/channel link."""
-    link_data = links_collection.find_one({"_id": token, "active": True})
-    
-    if link_data:
-        links_collection.update_one(
-            {"_id": token},
-            {"$inc": {"clicks": 1}}
-        )
-        return {"url": link_data.get("telegram_link") or link_data.get("group_link")}
-    else:
-        raise HTTPException(status_code=404, detail="Link not found")
 
 @app.get("/")
 async def root():
