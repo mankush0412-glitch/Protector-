@@ -206,142 +206,157 @@ else:
     )
 
 await update.message.reply_text(
-    """╔═══ 🔐 Access Restricted ═══╗
+    """✨ 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 𝐓𝐄𝐀𝐌 𝐋𝐄𝐀𝐃𝐄𝐑 ✨
 
-🚫 You cannot access this link yet.
+🔐 𝐘𝐨𝐮𝐫 𝐀𝐜𝐜𝐞𝐬𝐬 𝐢𝐬 𝐁𝐞𝐢𝐧𝐠 𝐕𝐞𝐫𝐢𝐟𝐢𝐞𝐝...
 
-📢 Join all required channels below
-to unlock your protected content.
+📢 𝐏𝐥𝐞𝐚𝐬𝐞 𝐉𝐨𝐢𝐧 𝐀𝐥𝐥 𝐑𝐞𝐪𝐮𝐢𝐫𝐞𝐝 𝐂𝐡𝐚𝐧𝐧𝐞𝐥𝐬  
+𝐓𝐨 𝐔𝐧𝐥𝐨𝐜𝐤 𝐘𝐨𝐮𝐫 𝐏𝐫𝐨𝐭𝐞𝐜𝐭𝐞𝐝 𝐋𝐢𝐧𝐤 🚀
 
-👇 Complete the steps and click CHECK
-
-╚═══════════════════════════╝""",
+👇 𝐂𝐨𝐦𝐩𝐥𝐞𝐭𝐞 𝐓𝐡𝐞 𝐒𝐭𝐞𝐩𝐬 𝐀𝐧𝐝 𝐂𝐥𝐢𝐜𝐤 𝐂𝐇𝐄𝐂𝐊""",
     reply_markup=InlineKeyboardMarkup(keyboard),
     parse_mode=ParseMode.MARKDOWN
 )
-        return
+return
 
-    # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
-    if context.args:
-        token = context.args[0]
-link_data = 
-links_collection.find_one({"_id": token, "active": True})
-        if link_data:
-            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
-            keyboard = [[
-                InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))
-            ]]
-            await update.message.reply_text(
-                "🔐 This is a Protected Link\n\nClick the button below to proceed.",
-                reply_markup=InlineKeyboardMarkup(keyboard)
-            )
-        else:
-            await update.message.reply_text("❌ Link expired or revoked")
-        return
+  # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
+if context.args:
+    token = context.args[0]
 
-    # 👋 NORMAL START — WELCOME UI (ONLY AFTER JOIN)
-    user_name = update.effective_user.first_name or "User"
+    link_data = links_collection.find_one({"_id": token, "active": True})
 
-    welcome_msg = f"""╔──────── ✧ ────────╗
-      Welcome {user_name}
-╚──────── ✧ ────────╝
+    if link_data:
+        web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
 
-🤖 I am your Link Protection Bot
-I help you keep your channel links safe & secure.
+        keyboard = [[
+            InlineKeyboardButton("🚀 𝙅𝙤𝙞𝙣 𝙂𝙧𝙤𝙪𝙥", web_app=WebAppInfo(url=web_app_url))
+        ]]
 
-🛠 Commands:
-• /start – Start the bot
-• /protect – Generate protected link
-• /help – Show help options
+        await update.message.reply_text(
+            """💠 *ACCESS UNLOCK PANEL*
 
-🌟 Features:
-• 🔒 Advanced Link Encryption
-• 🚀 Instant Link Generation
-• 🛡️ Anti-Forward Protection
-• 🎯 Easy to use UI"""
-
-    keyboard = []
-    for ch in get_support_channels():
-        invite_link = await get_channel_invite_link(context, ch)
-        keyboard.append(
-            [InlineKeyboardButton("🌟 Support Channel", url=invite_link)]
+🔐 Your protected link is ready  
+⚡ Click below to enter secure zone
+""",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode=ParseMode.MARKDOWN
         )
 
-    keyboard.append(
-        [InlineKeyboardButton("🚀 Create Protected Link", callback_data="create_link")]
-    )
+    else:
+        await update.message.reply_text("❌ Link expired or revoked")
 
-    await update.message.reply_text(welcome_msg, reply_markup=InlineKeyboardMarkup(keyboard))
+    return
+
+
+# 🏠 NORMAL START (WELCOME UI)
+user_name = update.effective_user.first_name or "User"
+
+welcome_msg = (
+    f"💎 *Welcome {user_name}* 💎\n\n"
+    "🔐 Secure Link Protection Activated\n"
+    "⚡ Fast • Safe • Advanced System\n\n"
+    "📢 *Available Commands:*\n"
+    "➤ /start\n"
+    "➤ /protect\n"
+    "➤ /help\n\n"
+    "🚀 Ready to generate your protected link!"
+)
+
+keyboard = []
+
+for ch in get_support_channels():
+    invite_link = await get_channel_invite_link(context, ch)
+    keyboard.append([
+        InlineKeyboardButton("✨ 𝙎𝙪𝙥𝙥𝙤𝙧𝙩 𝘾𝙝𝙖𝙣𝙣𝙚𝙡", url=invite_link)
+    ])
+
+keyboard.append([
+    InlineKeyboardButton("🚀 𝘾𝙧𝙚𝙖𝙩𝙚 𝙋𝙧𝙤𝙩𝙚𝙘𝙩𝙚𝙙 𝙇𝙞𝙣𝙠", callback_data="create_link")
+])
+
+await update.message.reply_text(
+    welcome_msg,
+    reply_markup=InlineKeyboardMarkup(keyboard),
+    parse_mode=ParseMode.MARKDOWN
+)  
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle button callbacks."""
+    """Handle button callbacks"""
+
     query = update.callback_query
     await query.answer()
-await query.answer("Checking...", show_alert=False)
-    
+
+    # ✅ CHECK JOIN BUTTON
     if query.data == "check_join":
         if await check_channel_membership(query.from_user.id, context):
             await query.message.edit_text(
-    """╔═══ ✅ Verification Successful ═══╗
+                """✅ *Verification Successful*
 
 🎉 You have successfully joined all channels!
-
 🚀 You can now continue using the bot.
-
-╚═════════════════════════════════╝"""
+""",
+                parse_mode=ParseMode.MARKDOWN
             )
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
+
+    # ✅ CHECK JOIN WITH TOKEN
     elif query.data.startswith("check_join_"):
         token = query.data.replace("check_join_", "")
 
-    if await check_channel_membership(query.from_user.id, context):
+        if await check_channel_membership(query.from_user.id, context):
 
-    # 🔥 STEP 3.1 ADD THIS LINE
-    links_collection.update_one(
-        {"_id": token},
-        {"$addToSet": {"verified_users": query.from_user.id}}
-    )
+            # 🔥 SAVE VERIFIED USER
+            links_collection.update_one(
+                {"_id": token},
+                {"$addToSet": {"verified_users": query.from_user.id}}
+            )
 
-    link_data = links_collection.find_one({"_id": token, "active": True})
-        if link_data:
-            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
+            link_data = links_collection.find_one({"_id": token, "active": True})
 
-            keyboard = [[InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            await query.message.edit_text(
-    """╔═══ ✅ Access Granted ═══╗
+            if link_data:
+                web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
 
-🔓 Verification complete!
+                keyboard = [[
+                    InlineKeyboardButton("🚀 𝙅𝙤𝙞𝙣 𝙂𝙧𝙤𝙪𝙥", web_app=WebAppInfo(url=web_app_url))
+                ]]
 
-🚀 Click below to access your link.
+                await query.message.edit_text(
+                    """💠 *ACCESS GRANTED*
 
-╚═══════════════════════════╝""",
-    reply_markup=reply_markup
-)
-            
-            
-        else:
-            await query.message.edit_text("❌ Link expired or revoked")
-    else:
-        await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
-        
+🔓 Verification complete  
+🚀 Click below to open your link
+""",
+                    reply_markup=InlineKeyboardMarkup(keyboard),
+                    parse_mode=ParseMode.MARKDOWN
+                )
+            else:
+                await query.message.edit_text("❌ Link expired or revoked")
+
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
-    
+
+    # ✅ CREATE LINK BUTTON
     elif query.data == "create_link":
         await query.message.reply_text(
-            "To create a protected link, use:\n\n"
-            "`/protect https://t.me/yourchannel`\n\n"
-            "Replace with your actual channel link.",
+            """🛠 *Create Protected Link*
+
+Use:
+/protect https://t.me/yourchannel
+
+Replace with your actual link.
+""",
             parse_mode=ParseMode.MARKDOWN
         )
-    
+
+    # ✅ BROADCAST CONFIRM
     elif query.data == "confirm_broadcast":
         await handle_broadcast_confirmation(update, context)
-    
+
+    # ❌ CANCEL BROADCAST
     elif query.data == "cancel_broadcast":
         await query.message.edit_text("❌ Broadcast cancelled")
-    
+
+    # 🔥 REVOKE LINK
     elif query.data.startswith("revoke_"):
         link_id = query.data.replace("revoke_", "")
         await handle_revoke_link(update, context, link_id)
@@ -399,7 +414,8 @@ token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
         "clicks": 0
     })
 
-    bot_username = (await context.bot.get_me()).username
+    bot_info = await context.bot.get_me()
+    bot_username = bot_info.username
     protected_link = f"https://t.me/{bot_username}?start={token}"
     
     # Simple buttons
