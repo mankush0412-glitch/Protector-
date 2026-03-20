@@ -184,8 +184,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
     if context.args:
         token = context.args[0]
-        link_data = links_collection.find_one({"_id": token, "active": True})
-
+link_data = 
+links_collection.find_one({"_id": token, "active": True})
         if link_data:
             web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
             keyboard = [[
@@ -247,7 +247,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
     elif query.data.startswith("check_join_"):
-    token = query.data.replace("check_join_", "")
+        token = 
+    query.data.replace("check_join_", "")
 
     if await check_channel_membership(query.from_user.id, context):
         link_data = links_collection.find_one({"_id": token, "active": True})
@@ -267,9 +268,6 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     else:
         await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
         
-                )
-            else:
-                await query.message.edit_text("❌ Link expired or revoked")
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
     
@@ -328,9 +326,6 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not telegram_link.startswith("https://t.me/"):
         await update.message.reply_text("❌ Invalid link. Must start with https://t.me/")
         return
-        
-    import random
-import string
 
 token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
     short_id = token.upper()
