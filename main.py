@@ -162,15 +162,39 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         callback_data = f"check_join_{context.args[0]}" if context.args else "check_join"
 
         keyboard = []
-        for ch in get_support_channels():
-            invite_link = await get_channel_invite_link(context, ch)
-            keyboard.append(
-                [InlineKeyboardButton("📢 Join Channel", url=invite_link)]
-            )
 
-        keyboard.append(
-            [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
-        )
+for ch in get_support_channels():
+    try:
+        try:
+            chat_id = int(ch)
+        except ValueError:
+            chat_id = ch if ch.startswith("@") else f"@{ch}"
+
+        member = await context.bot.get_chat_member(chat_id=chat_id, user_id=user_id)
+
+        # ✅ Agar already joined hai → skip
+        if member.status in (ChatMember.MEMBER, ChatMember.ADMINISTRATOR, ChatMember.OWNER):
+            continue
+
+    except:
+        # ⚠️ Agar error aaye toh button dikha de
+        pass
+
+    invite_link = await get_channel_invite_link(context, ch)
+
+    keyboard.append(
+        [InlineKeyboardButton("📢 Join Channel", url=invite_link)]
+    )
+
+# 🔥 Agar sab joined ho gaye ho
+if not keyboard:
+    keyboard.append(
+        [InlineKeyboardButton("✅ Already Joined", callback_data=callback_data)]
+    )
+else:
+    keyboard.append(
+        [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
+    )
 
         await update.message.reply_text(
             "🔐 *Access Restricted*\n\n"
