@@ -1,6 +1,8 @@
 import os
 import logging
 import asyncio
+import random
+import string
 import datetime
 from typing import Optional
 from pymongo import MongoClient
@@ -181,11 +183,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
     if context.args:
-        encoded_id = context.args[0]
+        token = context.args[0]
         link_data = links_collection.find_one({"_id": encoded_id, "active": True})
 
         if link_data:
-            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={encoded_id}"
+            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token_id}"
             keyboard = [[
                 InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))
             ]]
@@ -244,25 +246,27 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             )
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
-    
     elif query.data.startswith("check_join_"):
-        # Handle check join for protected links
-        encoded_id = query.data.replace("check_join_", "")
+    token = query.data.replace("check_join_", "")
+
+    if await check_channel_membership(query.from_user.id, context):
+        link_data = links_collection.find_one({"_id": token, "active": True})
+
+        if link_data:
+            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
+
+            keyboard = [[InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+
+            await query.message.edit_text(
+                "✅ Verified!\n\nYou can now access the protected link.",
+                reply_markup=reply_markup
+            )
+        else:
+            await query.message.edit_text("❌ Link expired or revoked")
+    else:
+        await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
         
-        if await check_channel_membership(query.from_user.id, context):
-            # User has joined, show protected link
-            link_data = links_collection.find_one({"_id": encoded_id, "active": True})
-            
-            if link_data:
-                web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={encoded_id}"
-                
-                keyboard = [[InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))]]
-                reply_markup = InlineKeyboardMarkup(keyboard)
-                
-                await query.message.edit_text(
-                    "✅ Verified!\n\n"
-                    "You can now access the protected link.",
-                    reply_markup=reply_markup
                 )
             else:
                 await query.message.edit_text("❌ Link expired or revoked")
@@ -329,6 +333,7 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 import string
 
 token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+short_id = token.upper()
 
     links_collection.insert_one({
         "_id": token,
