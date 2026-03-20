@@ -428,7 +428,7 @@ keyboard = [
 reply_markup = InlineKeyboardMarkup(keyboard)
     
     # Formatted message with markdown for easy copying
-    await update.message.reply_text(
+await update.message.reply_text(
         f"✅ *Protected Link Created!*\n\n"
         f"🔑 *Link ID:* `{short_id}`\n"
         f"📊 *Status:* 🟢 Active\n"
