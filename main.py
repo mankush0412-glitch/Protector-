@@ -158,71 +158,61 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
     # 🔐 FORCE JOIN — FOR ALL USERS (NORMAL + PROTECTED)
-    if not await check_channel_membership(user_id, context):
-        callback_data = f"check_join_{context.args[0]}" if context.args else "check_join"
-        
-keyboard = []
+if not await check_channel_membership(user_id, context):
+    callback_data = f"check_join_{context.args[0]}" if context.args else "check_join"
+    keyboard = []
 
-
-for ch in get_support_channels():
-    try:
+    for ch in get_support_channels():
         try:
-            chat_id = int(ch)
-        except ValueError:
-            chat_id = ch if ch.startswith("@") else f"@{ch}"
+            try:
+                chat_id = int(ch)
+            except ValueError:
+                chat_id = ch if ch.startswith("@") else f"@{ch}"
 
-        member = await context.bot.get_chat_member(
-            chat_id=chat_id,
-            user_id=user_id
-        )
+            member = await context.bot.get_chat_member(
+                chat_id=chat_id,
+                user_id=user_id
+            )
 
-        if member.status in (
-            ChatMember.MEMBER,
-            ChatMember.ADMINISTRATOR,
-            ChatMember.OWNER
-        ):
-            continue
+            if member.status in (
+                ChatMember.MEMBER,
+                ChatMember.ADMINISTRATOR,
+                ChatMember.OWNER
+            ):
+                continue
 
-    except:
-        pass
+        except:
+            pass
+
     invite_link = await get_channel_invite_link(context, ch)
 
     keyboard.append(
-        [InlineKeyboardButton("✨ 𝙅𝙤𝙞𝙣 𝘾𝙝𝙖𝙣𝙣𝙚𝙡", url=invite_link)]
-    )
+            [InlineKeyboardButton("✨ 𝙅𝙤𝙞𝙣 𝘾𝙝𝙖𝙣𝙣𝙚𝙡 ✨", url=invite_link)]
+        )
 
-# 🔥 Agar sab joined ho gaye ho
-if not keyboard:
-    keyboard.append(
-        [InlineKeyboardButton("✅ Already Joined", callback_data=callback_data)]
-    )
-else:
-    keyboard.append(
-        [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
-    )
-# 🔥 Agar sab joined ho gaye ho
-if not keyboard:
-    keyboard.append(
-        [InlineKeyboardButton("✅ Already Joined", callback_data=callback_data)]
-    )
-else:
-    keyboard.append(
-        [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
-    )
+    # 🔥 Agar sab joined ho gaye ho
+    if not keyboard:
+        keyboard.append(
+            [InlineKeyboardButton("✅ 𝘼𝙡𝙧𝙚𝙖𝙙𝙮 𝙅𝙤𝙞𝙣𝙚𝙙", callback_data=callback_data)]
+        )
+    else:
+        keyboard.append(
+            [InlineKeyboardButton("✔️ 𝘾𝙝𝙚𝙘𝙠", callback_data=callback_data)]
+        )
 
 await update.message.reply_text(
-    """✨ 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 𝐓𝐄𝐀𝐌 𝐋𝐄𝐀𝐃𝐄𝐑 ✨
+        """✨ 𝙒𝙀𝙇𝘾𝙊𝙈𝙀 𝙏𝙊 𝙏𝙀𝘼𝙈 𝙇𝙀𝘼𝘿𝙀𝙍 ✨
 
-🔐 𝐘𝐨𝐮𝐫 𝐀𝐜𝐜𝐞𝐬𝐬 𝐢𝐬 𝐁𝐞𝐢𝐧𝐠 𝐕𝐞𝐫𝐢𝐟𝐢𝐞𝐝...
+🔐 𝙔𝙤𝙪𝙧 𝘼𝙘𝙘𝙚𝙨𝙨 𝙄𝙨 𝘽𝙚𝙞𝙣𝙜 𝙑𝙚𝙧𝙞𝙛𝙞𝙚𝙙...
 
-📢 𝐏𝐥𝐞𝐚𝐬𝐞 𝐉𝐨𝐢𝐧 𝐀𝐥𝐥 𝐑𝐞𝐪𝐮𝐢𝐫𝐞𝐝 𝐂𝐡𝐚𝐧𝐧𝐞𝐥𝐬  
-𝐓𝐨 𝐔𝐧𝐥𝐨𝐜𝐤 𝐘𝐨𝐮𝐫 𝐏𝐫𝐨𝐭𝐞𝐜𝐭𝐞𝐝 𝐋𝐢𝐧𝐤 🚀
+📢 𝙋𝙡𝙚𝙖𝙨𝙚 𝙅𝙤𝙞𝙣 𝘼𝙡𝙡 𝙍𝙚𝙦𝙪𝙞𝙧𝙚𝙙 𝘾𝙝𝙖𝙣𝙣𝙚𝙡𝙨  
+🚀 𝙏𝙤 𝙐𝙣𝙡𝙤𝙘𝙠 𝙔𝙤𝙪𝙧 𝙋𝙧𝙤𝙩𝙚𝙘𝙩𝙚𝙙 𝙇𝙞𝙣𝙠  
 
-👇 𝐂𝐨𝐦𝐩𝐥𝐞𝐭𝐞 𝐓𝐡𝐞 𝐒𝐭𝐞𝐩𝐬 𝐀𝐧𝐝 𝐂𝐥𝐢𝐜𝐤 𝐂𝐇𝐄𝐂𝐊""",
-    reply_markup=InlineKeyboardMarkup(keyboard),
-    parse_mode=ParseMode.MARKDOWN
-)
-return
+👇 𝘾𝙤𝙢𝙥𝙡𝙚𝙩𝙚 𝙏𝙝𝙚 𝙎𝙩𝙚𝙥𝙨 𝘼𝙣𝙙 𝘾𝙡𝙞𝙘𝙠 𝘾𝙃𝙀𝘾𝙆""",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode=ParseMode.MARKDOWN
+    )
+    return  
 
   # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
 if context.args:
