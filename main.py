@@ -158,7 +158,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
     # 🔐 FORCE JOIN — FOR ALL USERS (NORMAL + PROTECTED)
-if not await check_channel_membership(user_id, context):
+ if not await check_channel_membership(user_id, context):
     callback_data = f"check_join_{context.args[0]}" if context.args else "check_join"
     keyboard = []
 
