@@ -170,14 +170,19 @@ for ch in get_support_channels():
         except ValueError:
             chat_id = ch if ch.startswith("@") else f"@{ch}"
 
-        member = await context.bot.get_chat_member(chat_id=chat_id, user_id=user_id)
+        member = await context.bot.get_chat_member(
+            chat_id=chat_id,
+            user_id=user_id
+        )
 
-        # ✅ Agar already joined hai → skip
-        if member.status in (ChatMember.MEMBER, ChatMember.ADMINISTRATOR, ChatMember.OWNER):
+        if member.status in (
+            ChatMember.MEMBER,
+            ChatMember.ADMINISTRATOR,
+            ChatMember.OWNER
+        ):
             continue
 
     except:
-        # ⚠️ Agar error aaye toh button dikha de
         pass
 
     invite_link = await get_channel_invite_link(context, ch)
