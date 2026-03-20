@@ -272,9 +272,13 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if query.data == "check_join":
         if await check_channel_membership(query.from_user.id, context):
             await query.message.edit_text(
-                "✅ Verified!\n"
-                "You can now use the bot.\n\n"
-                "Use /help for commands."
+    """╔═══ ✅ Verification Successful ═══╗
+
+🎉 You have successfully joined all channels!
+
+🚀 You can now continue using the bot.
+
+╚═════════════════════════════════╝"""
             )
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
@@ -290,11 +294,18 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
             keyboard = [[InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-
             await query.message.edit_text(
-                "✅ Verified!\n\nYou can now access the protected link.",
-                reply_markup=reply_markup
-            )
+    """╔═══ ✅ Access Granted ═══╗
+
+🔓 Verification complete!
+
+🚀 Click below to access your link.
+
+╚═══════════════════════════╝""",
+    reply_markup=reply_markup
+)
+            
+            
         else:
             await query.message.edit_text("❌ Link expired or revoked")
     else:
