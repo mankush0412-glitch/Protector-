@@ -212,7 +212,7 @@ await update.message.reply_text(
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode=ParseMode.MARKDOWN
     )
-    return  
+return  
 
   # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
 if context.args:
