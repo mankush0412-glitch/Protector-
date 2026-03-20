@@ -289,8 +289,14 @@ show_alert=False)
     query.data.replace("check_join_", "")
 
     if await check_channel_membership(query.from_user.id, context):
-        link_data = links_collection.find_one({"_id": token, "active": True})
 
+    # 🔥 STEP 3.1 ADD THIS LINE
+    links_collection.update_one(
+        {"_id": token},
+        {"$addToSet": {"verified_users": query.from_user.id}}
+    )
+
+    link_data = links_collection.find_one({"_id": token, "active": True})
         if link_data:
             web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
 
@@ -906,6 +912,19 @@ async def on_shutdown():
     await telegram_bot_app.shutdown()
     client.close()
     logger.info("Bot stopped")
+@app.get("/getgrouplink/{token}")
+async def get_group_link(token: str, user_id: int):
+
+    data = links_collection.find_one({"_id": token})
+
+    if not data:
+        return {"error": "Invalid link"}
+
+    # 🔥 SECURITY CHECK
+    if user_id not in data.get("verified_users", []):
+        return {"error": "Unauthorized"}
+
+    return {"url": data["telegram_link"]}
 
 @app.post("/{token}")
 async def telegram_webhook(request: Request, token: str):
