@@ -184,10 +184,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
     if context.args:
         token = context.args[0]
-        link_data = links_collection.find_one({"_id": encoded_id, "active": True})
+        link_data = links_collection.find_one({"_id": token, "active": True})
 
         if link_data:
-            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token_id}"
+            web_app_url = f"{os.environ.get('RENDER_EXTERNAL_URL')}/join?token={token}"
             keyboard = [[
                 InlineKeyboardButton("🔗 Join Group", web_app=WebAppInfo(url=web_app_url))
             ]]
@@ -333,7 +333,7 @@ async def protect_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 import string
 
 token = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-short_id = token.upper()
+    short_id = token.upper()
 
     links_collection.insert_one({
         "_id": token,
