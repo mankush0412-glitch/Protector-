@@ -205,7 +205,7 @@ else:
         [InlineKeyboardButton("✅ Check", callback_data=callback_data)]
     )
 
-        await update.message.reply_text(
+await update.message.reply_text(
     """╔═══ 🔐 Access Restricted ═══╗
 
 🚫 You cannot access this link yet.
@@ -216,10 +216,9 @@ to unlock your protected content.
 👇 Complete the steps and click CHECK
 
 ╚═══════════════════════════╝""",
-    reply_markup=InlineKeyboardMarkup(keyboard)
-        )
-            parse_mode=ParseMode.MARKDOWN
-        )
+    reply_markup=InlineKeyboardMarkup(keyboard),
+    parse_mode=ParseMode.MARKDOWN
+)
         return
 
     # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
@@ -277,8 +276,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     """Handle button callbacks."""
     query = update.callback_query
     await query.answer()
-    await query.answer("Checking...",
-show_alert=False)
+await query.answer("Checking...", show_alert=False)
     
     if query.data == "check_join":
         if await check_channel_membership(query.from_user.id, context):
@@ -294,8 +292,7 @@ show_alert=False)
         else:
             await query.answer("❌ Not joined yet. Please join first.", show_alert=True)
     elif query.data.startswith("check_join_"):
-        token = 
-    query.data.replace("check_join_", "")
+        token = query.data.replace("check_join_", "")
 
     if await check_channel_membership(query.from_user.id, context):
 
