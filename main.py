@@ -197,10 +197,18 @@ else:
     )
 
         await update.message.reply_text(
-            "🔐 *Access Restricted*\n\n"
-            "Please join all required channels/groups to use this bot.\n"
-            "After joining, click ✅ Check.",
-            reply_markup=InlineKeyboardMarkup(keyboard),
+    """╔═══ 🔐 Access Restricted ═══╗
+
+🚫 You cannot access this link yet.
+
+📢 Join all required channels below
+to unlock your protected content.
+
+👇 Complete the steps and click CHECK
+
+╚═══════════════════════════╝""",
+    reply_markup=InlineKeyboardMarkup(keyboard)
+        )
             parse_mode=ParseMode.MARKDOWN
         )
         return
