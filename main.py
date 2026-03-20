@@ -163,6 +163,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         
 keyboard = []
 
+
 for ch in get_support_channels():
     try:
         try:
@@ -184,7 +185,6 @@ for ch in get_support_channels():
 
     except:
         pass
-
     invite_link = await get_channel_invite_link(context, ch)
 
     keyboard.append(
