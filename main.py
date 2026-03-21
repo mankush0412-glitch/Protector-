@@ -201,7 +201,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             [InlineKeyboardButton("✔️ 𝘾𝙝𝙚𝙘𝙠", callback_data=callback_data)]
         )
 
-await update.message.reply_text(
+    await update.message.reply_text(
         """✨ 𝙒𝙀𝙇𝘾𝙊𝙈𝙀 𝙏𝙊 𝙏𝙀𝘼𝙈 𝙇𝙀𝘼𝘿𝙀𝙍 ✨
 
 🔐 𝙔𝙤𝙪𝙧 𝘼𝙘𝙘𝙚𝙨𝙨 𝙄𝙨 𝘽𝙚𝙞𝙣𝙜 𝙑𝙚𝙧𝙞𝙛𝙞𝙚𝙙...
