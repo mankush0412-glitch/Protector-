@@ -213,7 +213,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode=ParseMode.MARKDOWN
     )
-return  
+    return  
 
   # 🔗 PROTECTED LINK FLOW (AFTER JOIN)
 if context.args:
