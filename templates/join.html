@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAM LEADER — Access</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --neon-cyan:#00ffff;
+  --neon-purple:#b800ff;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Rajdhani', sans-serif;
+  background:#000;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  z-index:-2;
+}
+
+.ring{
+  position:absolute;
+  border-radius:50%;
+  border:2px solid rgba(0,255,255,0.3);
+  animation:spin 20s linear infinite;
+}
+.r1{width:500px;height:500px;}
+.r2{width:350px;height:350px;animation-direction:reverse}
+.r3{width:200px;height:200px;}
+
+@keyframes spin{
+  0%{transform:rotate(0)}
+  100%{transform:rotate(360deg)}
+}
+
+.container{
+  background:rgba(0,0,0,0.7);
+  padding:50px;
+  border-radius:25px;
+  text-align:center;
+  backdrop-filter:blur(15px);
+  box-shadow:0 0 60px rgba(0,255,255,0.5);
+  max-width:400px;
+}
+
+.logo{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:auto;
+  box-shadow:0 0 30px var(--neon-cyan);
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+h1{
+  font-family:'Orbitron';
+  font-size:2em;
+  margin-top:15px;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.status{
+  margin-top:20px;
+  font-size:1.2em;
+}
+
+button{
+  margin-top:25px;
+  padding:15px 30px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  display:none;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="ring r1"></div>
+<div class="ring r2"></div>
+<div class="ring r3"></div>
+
+<div class="container">
+
+  <div class="logo">
+    <img src="https://i.ibb.co/svvgYRW5/tmpuojdqf2i.jpg">
+  </div>
+
+  <h1>TEAM LEADER</h1>
+
+  <div class="status" id="statusText">Verifying Access...</div>
+
+  <button id="btn">🚀 Go to Channel</button>
+
+</div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://libtl.com/sdk.js" data-zone="11609595" data-sdk="show_11609595"></script>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+const statusText = document.getElementById("statusText");
+const btn = document.getElementById("btn");
+
+const token = "{{ token }}";
+
+/* 🔥 STEP 3.3 ADD */
+let user_id = null;
+try {
+  user_id = tg.initDataUnsafe?.user?.id;
+} catch(e) {
+  user_id = null;
+}
+
+/* MATRIX EFFECT */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const arr = chars.split("");
+
+const fontSize = 14;
+const cols = canvas.width / fontSize;
+const drops = Array(Math.floor(cols)).fill(1);
+
+function draw(){
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#0ff";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i=0;i<drops.length;i++){
+    const text = arr[Math.floor(Math.random()*arr.length)];
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random()>0.975){
+      drops[i]=0;
+    }
+    drops[i]++;
+  }
+}
+setInterval(draw,40);
+
+/* MONETAG GATE */
+function waitForMonetag(timeout = 10000){
+  return new Promise((resolve, reject) => {
+    const started = Date.now();
+    const timer = setInterval(() => {
+      if (typeof show_11609595 === "function") {
+        clearInterval(timer);
+        resolve();
+      } else if (Date.now() - started >= timeout) {
+        clearInterval(timer);
+        reject(new Error("Monetag SDK unavailable"));
+      }
+    }, 100);
+  });
+}
+
+async function showAd(){
+  await waitForMonetag();
+
+  // Do not leave the page stuck if Monetag does not resolve its promise.
+  await Promise.race([
+    Promise.resolve(show_11609595()),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Ad timeout")), 20000)
+    )
+  ]);
+}
+
+/* VERIFY SYSTEM */
+async function verify(){
+  try{
+
+    if(!user_id){
+      statusText.innerText = "❌ Open via Telegram";
+      return;
+    }
+
+    const res = await fetch(`/getgrouplink/${token}`);
+    const data = await res.json();
+
+    if(data.error){
+      statusText.innerText = "❌ " + data.error;
+      return;
+    }
+
+    statusText.innerText = "✅ Link Verified";
+    btn.style.display = "inline-block";
+
+    btn.onclick = () => {
+      tg.openTelegramLink(data.url);
+      setTimeout(()=>tg.close(),1000);
+    };
+
+  }catch{
+    statusText.innerText = "❌ Server Error";
+  }
+}
+
+async function startAccessFlow(){
+  try{
+    statusText.innerText = "Please wait...";
+    await showAd();
+    statusText.innerText = "Verifying Access...";
+    await verify();
+  }catch(e){
+    statusText.innerText = "❌ Ad unavailable. Please try again.";
+  }
+}
+
+setTimeout(startAccessFlow,1500);
+</script>
+
+</body>
+</html>
